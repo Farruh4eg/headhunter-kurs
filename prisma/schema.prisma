@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model employers {
+  employer_id Int           @id @default(autoincrement())
+  company     String        @db.VarChar(150)
+  joblistings joblistings[]
+}
+
+model joblistings {
+  job_id              Int                   @id @default(autoincrement())
+  title               String                @db.VarChar(150)
+  description         String?
+  salary              Decimal?              @db.Decimal(10, 2)
+  deadline            DateTime?             @db.Date
+  employer_id         Int
+  experience          Int?                  @db.SmallInt
+  employers           employers?            @relation(fields: [employer_id], references: [employer_id], onDelete: NoAction, onUpdate: NoAction)
+  savedjoblistings    savedjoblistings[]
+  userjobapplications userjobapplications[]
+}
+
+model roles {
+  role_id Int     @id @default(autoincrement())
+  role    String  @db.VarChar(64)
+  users   users[]
+}
+
+model savedjoblistings {
+  saved_id    Int          @id @default(autoincrement())
+  user_id     Int
+  job_id      Int
+  saved_date  DateTime?    @default(now()) @db.Timestamp(6)
+  joblistings joblistings? @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction)
+  users       users?       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model userjobapplications {
+  application_id   Int          @id @default(autoincrement())
+  user_id          Int
+  job_id           Int
+  application_date DateTime?    @default(now()) @db.Timestamp(6)
+  joblistings      joblistings? @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction)
+  users            users?       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  user_id             Int                   @id @default(autoincrement())
+  username            String                @unique @db.VarChar(100)
+  last_name           String?               @unique @db.VarChar(100)
+  first_name          String?               @unique @db.VarChar(100)
+  password            String                @db.VarChar(256)
+  email               String?               @unique @db.VarChar(150)
+  experience          Int?                  @db.SmallInt
+  date_created        DateTime?             @default(now()) @db.Date
+  refresh_token       String
+  role_id             Int                   @default(1)
+  savedjoblistings    savedjoblistings[]
+  userjobapplications userjobapplications[]
+  roles               roles?                @relation(fields: [role_id], references: [role_id])
+}
