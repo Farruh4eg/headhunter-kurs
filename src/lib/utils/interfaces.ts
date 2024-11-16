@@ -3,6 +3,7 @@ export interface PostBody {
 	last_name: string;
 	first_name: string;
 	email: string;
+	experience: number;
 }
 
 export interface UserData extends PostBody {

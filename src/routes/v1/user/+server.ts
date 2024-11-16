@@ -118,7 +118,8 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 						role: true
 					}
 				},
-				date_created: true
+				date_created: true,
+				experience: true
 			},
 			skip: offset,
 			take: pageSize
@@ -145,7 +146,8 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 						role: true
 					}
 				},
-				date_created: true
+				date_created: true,
+				experience: true
 			},
 			skip: offset,
 			take: pageSize
@@ -273,7 +275,8 @@ export const PUT: RequestHandler = async ({ request, url }) => {
 		);
 	} else {
 		const body = (await request.json()) as PostBody;
-		let { user_id, last_name, first_name, email } = body;
+		let { user_id, last_name, first_name, email, experience } = body;
+		console.log(body);
 
 		const receivedUser = await prisma.users.findUnique({
 			where: {
@@ -291,7 +294,8 @@ export const PUT: RequestHandler = async ({ request, url }) => {
 				data: {
 					last_name,
 					first_name,
-					email
+					email,
+					experience: +experience
 				}
 			});
 		}
