@@ -1,4 +1,5 @@
 <script lang="ts">
+	import SearchResult from '$lib/components/SearchResult.svelte';
 	let { data } = $props();
 </script>
 
@@ -12,7 +13,7 @@
 	{:else}
 		<section class="mb-4 mt-6 flex flex-col gap-4">
 			{#each data.jobs as job (job.job_id)}
-				<SearchResult job={job.joblistings} user_id={data.user_id} />
+				<SearchResult job={job.joblistings} user_id={data.user_id} job_id={job.job_id} />
 			{/each}
 		</section>
 	{/if}

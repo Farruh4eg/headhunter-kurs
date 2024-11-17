@@ -53,3 +53,12 @@ export const debounce = <T extends (...args: any[]) => void>(func: T, delay: num
 		}, delay);
 	};
 };
+
+export const fetchProducts = async (
+	searchQuery: string,
+	page: number,
+	eventFetch: (input: string | URL | Request, init?: RequestInit | undefined) => Promise<Response>
+) => {
+	const response = await eventFetch(`/v1/jobs?q=${searchQuery}&page=${page}`);
+	return response.json();
+};
