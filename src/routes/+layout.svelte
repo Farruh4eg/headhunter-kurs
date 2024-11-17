@@ -125,7 +125,7 @@
 				required
 				bind:this={searchElement}
 				type="search"
-				placeholder="Поиск по магазину"
+				placeholder="Поиск вакансий"
 				class="relative box-border h-16 w-96 rounded-xl bg-gray-100
         p-5 text-sm transition-all hover:border hover:border-gray-100 hover:bg-white hover:shadow-xl"
 				id="search"
