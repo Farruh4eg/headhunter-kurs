@@ -54,7 +54,7 @@ export const debounce = <T extends (...args: any[]) => void>(func: T, delay: num
 	};
 };
 
-export const fetchProducts = async (
+export const fetchJobs = async (
 	searchQuery: string,
 	page: number,
 	eventFetch: (input: string | URL | Request, init?: RequestInit | undefined) => Promise<Response>
