@@ -4,7 +4,7 @@
 	import { addSpaceInString } from '$lib/utils/helpers';
 	import ButtonApply from './ButtonApply.svelte';
 
-	let { job, user_id, job_id } = $props();
+	let { job, user_id = -1, job_id } = $props();
 
 	let isLoggedIn = $state($session.isLoggedIn);
 
