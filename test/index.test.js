@@ -10,7 +10,7 @@ describe('app unit tests', () => {
 		});
 
 		it('get non-existing user info', async () => {
-			const userid = 9999999999;
+			const userid = 999;
 			const response = await fetch(`${apiEndpoint}/user?q=${userid}`);
 			const data = await response.json();
 			expect(data).toBeFalsy();
