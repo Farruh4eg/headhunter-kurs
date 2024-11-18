@@ -14,22 +14,21 @@
 	let jobEmployerLogo = job.employers.logo;
 </script>
 
-<section class="flex w-full rounded-lg border-2 border-red-600 bg-white p-5">
+<section
+	class="flex w-full items-center rounded-lg border-2 border-gray-100 bg-white p-4 shadow-md"
+>
 	<div class="relative flex h-20 justify-center">
-		<img src="/companies/{jobEmployerLogo}" alt="thumb-{jobEmployerCompany}" style="w-max" />
+		<img src="/companies/{jobEmployerLogo}" alt="thumb-{jobEmployerCompany}" class="w-max" />
 	</div>
 
-	<section class="flex w-full flex-col justify-between rounded-xl p-1">
-		<a href="/jobs/{job_id}" class="h-max w-full pb-12 hover:text-blue-600">
+	<section class="items-evenly flex w-full flex-col justify-between rounded-xl px-4 py-2">
+		<a href="/jobs/{job_id}" class="h-max w-full text-lg font-bold hover:text-blue-600">
 			{jobTitle}
 		</a>
-		<section class="flex flex-col items-end justify-between p-1">
+		<section class="flex flex-col items-end justify-between">
 			<section class="flex w-full justify-between gap-x-4">
-				<section class="flex w-full flex-col">
-					<span class="text-sm text-gray-600 line-through"
-						>{jobSalary}
-						<p></p></span
-					>
+				<section class="flex w-full flex-col justify-center">
+					<span class="text-2xl font-semibold text-blue-600">От {jobSalary} &#8381;</span>
 				</section>
 				{#if isLoggedIn}
 					<section class="flex items-end gap-x-4">

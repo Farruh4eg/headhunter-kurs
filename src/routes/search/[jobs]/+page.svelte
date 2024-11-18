@@ -47,7 +47,7 @@
 				<button
 					class="text-lg font-semibold text-blue-600 disabled:text-gray-600"
 					disabled={$pageN === 1}
-					on:click={() => {
+					onclick={() => {
 						$pageN--;
 						document.getElementById('search-results-container')?.scrollIntoView({
 							behavior: 'smooth'
@@ -58,7 +58,7 @@
 				<button
 					class="text-lg font-semibold text-blue-600 disabled:text-gray-600"
 					disabled={$pageN === $totalPages}
-					on:click={() => {
+					onclick={() => {
 						$pageN++;
 						document.getElementById('search-results-container')?.scrollIntoView({
 							behavior: 'smooth'

@@ -18,6 +18,7 @@ export const GET: RequestHandler = (async ({ url }: { url: URL }) => {
 
 	const salary: number[] = [20_000, 900_000];
 	const salaryParam = url.searchParams.get('salary');
+	const expParam = +url.searchParams.get('experience')!;
 	if (salaryParam) {
 		let splittedPrice = salaryParam.split('-');
 		try {

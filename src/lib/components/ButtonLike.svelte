@@ -62,7 +62,7 @@
 
 <button
 	onclick={addToLiked}
-	class="flex h-16 w-16 items-center justify-center rounded-xl border border-solid border-gray-300 p-4 hover:bg-gray-50"
+	class="flex h-14 w-14 items-center justify-center rounded-xl border border-solid border-gray-300 p-4 hover:bg-gray-50"
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
