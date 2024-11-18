@@ -1,26 +1,22 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
 
 	let { data, query } = $props();
 
 	let companiesCheckboxContainer: HTMLElement;
 	let checkboxes: HTMLInputElement[];
-	let inputMinPrice: HTMLInputElement;
-	let inputMaxPrice: HTMLInputElement;
+	let inputMinSalary: HTMLInputElement;
+	let inputMaxSalary: HTMLInputElement;
 
 	let companiesArray = new Set<string>(data.map((x: any) => x.employers.company));
-
-	let url = $page.url.searchParams;
 
 	let companiesStringified: string = '';
 	let salary: string;
 
 	const loadFiltersFromStorage = () => {
 		const filters = JSON.parse(localStorage.getItem('searchFilters') || '{}');
-		inputMinPrice.value = filters.minPrice || '20000';
-		inputMaxPrice.value = filters.maxPrice || '900000';
+		inputMinSalary.value = filters.minPrice || '20000';
+		inputMaxSalary.value = filters.maxPrice || '900000';
 
 		checkboxes.forEach((checkbox) => {
 			checkbox.checked = filters.employers.includes(checkbox.name);
@@ -35,29 +31,29 @@
 
 	const saveFiltersToStorage = () => {
 		const filters = {
-			minPrice: inputMinPrice.value,
-			maxPrice: inputMaxPrice.value,
+			minPrice: inputMinSalary.value,
+			maxPrice: inputMaxSalary.value,
 			employers: checkboxes.filter((checkbox) => checkbox.checked).map((checkbox) => checkbox.name)
 		};
 		localStorage.setItem('searchFilters', JSON.stringify(filters));
 	};
 
 	const validateFilters = () => {
-		if (parseInt(inputMinPrice.value) < 20_000 || isNaN(parseInt(inputMinPrice.value))) {
-			inputMinPrice.value = '20000';
-		} else if (parseInt(inputMinPrice.value) > 899_999) {
-			inputMinPrice.value = '899999';
+		if (parseInt(inputMinSalary.value) < 20_000 || isNaN(parseInt(inputMinSalary.value))) {
+			inputMinSalary.value = '20000';
+		} else if (parseInt(inputMinSalary.value) > 899_999) {
+			inputMinSalary.value = '899999';
 		}
 
 		if (
-			parseInt(inputMaxPrice.value) > 900_000 ||
-			parseInt(inputMaxPrice.value) < 20_001 ||
-			isNaN(parseInt(inputMaxPrice.value))
+			parseInt(inputMaxSalary.value) > 900_000 ||
+			parseInt(inputMaxSalary.value) < 20_001 ||
+			isNaN(parseInt(inputMaxSalary.value))
 		) {
-			inputMaxPrice.value = '900000';
+			inputMaxSalary.value = '900000';
 		}
 
-		salary = [inputMinPrice.value, inputMaxPrice.value].join('-');
+		salary = [inputMinSalary.value, inputMaxSalary.value].join('-');
 		companiesStringified = checkboxes
 			.filter((el) => el.checked)
 			.map((el) => el.name)
@@ -69,8 +65,8 @@
 			el.checked = false;
 		});
 
-		inputMinPrice.value = '20000';
-		inputMaxPrice.value = '900000';
+		inputMinSalary.value = '20000';
+		inputMaxSalary.value = '900000';
 	};
 
 	onMount(() => {
@@ -86,20 +82,22 @@
 <section class="flex h-max min-w-[12%] flex-col items-center gap-y-6 rounded-xl bg-white p-4 pb-10">
 	<section class="flex w-full flex-col gap-y-4">
 		<span class="font-bold">Заработная плата</span>
-		<section class="flex w-full justify-between">
+		<section class="flex w-full items-center justify-between gap-x-2">
+			<span>От</span>
 			<input
 				type="number"
 				name="min-price"
 				id="min-price"
-				bind:this={inputMinPrice}
+				bind:this={inputMinSalary}
 				class="w-[45%] rounded-lg border border-gray-200 p-2 text-sm placeholder:text-xs"
 				placeholder="От 20 000 руб"
 			/>
+			<span>До</span>
 			<input
 				type="number"
 				name="max-price"
 				id="max-price"
-				bind:this={inputMaxPrice}
+				bind:this={inputMaxSalary}
 				class="w-[45%] rounded-lg border border-gray-200 p-2 text-sm placeholder:text-xs"
 				placeholder="До 900 000 руб"
 			/>
@@ -109,7 +107,7 @@
 		class="flex h-48 w-full flex-col gap-y-4 overflow-y-scroll"
 		bind:this={companiesCheckboxContainer}
 	>
-		<span class="font-bold">Производители</span>
+		<span class="font-bold">Компании</span>
 		{#each companiesArray as company}
 			<section class="flex w-full items-center gap-x-4">
 				<input

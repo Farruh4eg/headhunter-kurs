@@ -18,8 +18,7 @@ model joblistings {
   job_id              Int                   @id @default(autoincrement())
   title               String                @db.VarChar(150)
   description         String?
-  salary              Decimal?              @db.Decimal(10, 2)
-  deadline            DateTime?             @db.Date
+  salary              Int?
   employer_id         Int
   experience          Int?                  @db.SmallInt
   employers           employers?            @relation(fields: [employer_id], references: [employer_id], onDelete: NoAction, onUpdate: NoAction)

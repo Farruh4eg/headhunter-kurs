@@ -10,14 +10,13 @@
 
 	let jobTitle = job.title;
 	let jobSalary = addSpaceInString(job.salary.toString());
-	let jobEmployerId = job.employers.employer_id;
 	let jobEmployerCompany = job.employers.company;
 	let jobEmployerLogo = job.employers.logo;
 </script>
 
-<section class="flex w-full rounded-lg bg-white p-5">
-	<div class="relative flex h-52 w-64 justify-center">
-		<img src="/companies/{jobEmployerLogo}" alt="thumb-{jobEmployerCompany}" />
+<section class="flex w-full rounded-lg border-2 border-red-600 bg-white p-5">
+	<div class="relative flex h-20 justify-center">
+		<img src="/companies/{jobEmployerLogo}" alt="thumb-{jobEmployerCompany}" style="w-max" />
 	</div>
 
 	<section class="flex w-full flex-col justify-between rounded-xl p-1">

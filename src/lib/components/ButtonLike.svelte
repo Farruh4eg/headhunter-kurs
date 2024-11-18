@@ -30,7 +30,7 @@
 	const addToLiked = async () => {
 		if (isLiked) {
 			await handleFetch(
-				'/v1/wishlist',
+				'/v1/saved',
 				'DELETE',
 				{
 					user_id,
@@ -44,7 +44,7 @@
 			savedJobsCountStore.update((value) => value - 1);
 		} else {
 			await handleFetch(
-				'/v1/wishlist',
+				'/v1/saved',
 				'POST',
 				{
 					user_id,

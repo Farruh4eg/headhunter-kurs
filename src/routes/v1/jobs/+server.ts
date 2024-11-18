@@ -46,6 +46,9 @@ export const GET: RequestHandler = (async ({ url }: { url: URL }) => {
 						}
 					}
 				},
+				include: {
+					employers: true
+				},
 				skip: offset,
 				take: pageSize
 			});
@@ -61,6 +64,9 @@ export const GET: RequestHandler = (async ({ url }: { url: URL }) => {
 			});
 		} else {
 			jobs = await prisma.joblistings.findMany({
+				include: {
+					employers: true
+				},
 				skip: offset,
 				take: pageSize
 			});
@@ -106,15 +112,18 @@ export const GET: RequestHandler = (async ({ url }: { url: URL }) => {
 					},
 					{
 						salary: {
-							gt: salary[0]
+							gte: salary[0]
 						}
 					},
 					{
 						salary: {
-							lt: salary[1]
+							lte: salary[1]
 						}
 					}
 				]
+			},
+			include: {
+				employers: true
 			},
 			skip: offset,
 			take: pageSize
@@ -131,12 +140,12 @@ export const GET: RequestHandler = (async ({ url }: { url: URL }) => {
 					},
 					{
 						salary: {
-							gt: salary[0]
+							gte: salary[0]
 						}
 					},
 					{
 						salary: {
-							lt: salary[1]
+							lte: salary[1]
 						}
 					},
 					{

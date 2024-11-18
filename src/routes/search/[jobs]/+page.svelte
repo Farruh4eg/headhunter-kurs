@@ -5,7 +5,7 @@
 	import { writable, type Writable } from 'svelte/store';
 	import { page } from '$app/stores';
 
-	export let data: any;
+	let { data } = $props();
 
 	let jobs: any = writable([]);
 
@@ -33,14 +33,15 @@
 <svelte:head>
 	<title>Результаты поиска</title>
 </svelte:head>
-<section class="mx-auto flex w-[1280px] justify-evenly gap-x-4 p-4">
+<section class="mx-auto flex w-[1280px] gap-x-4 p-4">
 	{#if $jobs?.length > 0}
 		<SearchFilters data={$jobs} query={data.searchQuery} />
 	{/if}
-	<section class="mb-4 mt-6 flex min-w-[40%] flex-col gap-4" id="search-results-container">
+	<section class="mb-4 mt-6 flex min-w-[60%] flex-col gap-4" id="search-results-container">
 		{#if $jobs?.length > 0}
 			{#each $jobs as job (job.job_id)}
-				<SearchResult job={job.joblistings} user_id={data.user_id} job_id={job.job_id} />
+				{console.log(job)}
+				<SearchResult {job} user_id={data.user_id} job_id={job.job_id} />
 			{/each}
 			<section class="mt-16 flex h-max justify-center gap-x-20">
 				<button
