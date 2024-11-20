@@ -28,7 +28,7 @@
 	let submitFilters = $state(() => {
 		validateFilters();
 		saveFiltersToStorage();
-		window.location.href = `/search/jobs?q=${query}&&salary=${salary}&company=${companiesStringified}&experience=${inputExperience.value}`;
+		window.location.href = `/search/jobs?q=${query}&salary=${salary}&company=${companiesStringified}&experience=${inputExperience.value}`;
 	});
 
 	const saveFiltersToStorage = () => {

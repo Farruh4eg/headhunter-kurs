@@ -276,7 +276,6 @@ export const PUT: RequestHandler = async ({ request, url }) => {
 	} else {
 		const body = (await request.json()) as PostBody;
 		let { user_id, last_name, first_name, email, experience } = body;
-		console.log(body);
 
 		const receivedUser = await prisma.users.findUnique({
 			where: {

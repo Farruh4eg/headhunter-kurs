@@ -67,7 +67,7 @@
 					{/if}
 				</section>
 				<section
-					class="flex w-max items-center gap-x-4 rounded-lg py-4 pl-4 pr-8 font-semibold shadow-md"
+					class="flex w-full items-center gap-x-4 rounded-lg py-4 pl-4 pr-8 font-semibold shadow-md"
 				>
 					<span>Требуемый опыт работы (в годах): </span>
 					{#if jobExperience}
