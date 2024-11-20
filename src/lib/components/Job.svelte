@@ -28,10 +28,10 @@
 	class="mx-auto my-0 box-border flex w-[1280px] flex-col items-end gap-y-10 p-8 text-gray-700"
 >
 	<section class="w-full rounded-xl bg-white p-6 text-gray-700">
-		<section class="flex justify-center items-start">
-			<section class="flex w-[800px] flex-col gap-y-4 shadow-xl rounded-lg p-4 px-10 min-h-[60vh]">
-				<section class="flex h-24 w-full items-start justify-start">
-					<section class="flex w-full justify-between">
+		<section class="flex items-start justify-center">
+			<section class="flex min-h-[60vh] w-[800px] flex-col gap-y-4 rounded-lg p-4 px-10 shadow-xl">
+				<section class="flex w-full items-start justify-start">
+					<section class="flex w-full items-center justify-between">
 						<h1 class="flex flex-wrap items-end gap-x-4 overflow-hidden pb-4">
 							<section class="flex w-max flex-wrap text-wrap text-3xl font-bold">
 								<span class="flex flex-wrap text-wrap">
@@ -39,9 +39,15 @@
 								</span>
 							</section>
 						</h1>
-						<section class="mx-1 flex h-24 justify-start">
-							<a href="/search/jobs?q=&company={jobEmployerCompany}">
-								<img src="/companies/{jobEmployerLogo}" alt="employer-logo" class="h-full" />
+						<section class="mx-1 flex flex-col items-center justify-center text-center">
+							<a href="/search/jobs?q=&company={jobEmployerCompany}" class="flex w-max">
+								<img src="/companies/{jobEmployerLogo}" alt="employer-logo" class="h-12" />
+							</a>
+							<a
+								href="/search/jobs?q=&company={jobEmployerCompany}"
+								class="max-w-40 text-wrap text-sm font-bold"
+							>
+								{jobEmployerCompany}
 							</a>
 						</section>
 					</section>
@@ -61,15 +67,15 @@
 					{/if}
 				</section>
 				<section
-						class="flex w-full items-center gap-x-4 rounded-lg py-4 pl-4 pr-8 font-semibold shadow-md"
-					>
-						<span>Требуемый опыт работы (в годах): </span>
-						{#if jobExperience}
+					class="flex w-max items-center gap-x-4 rounded-lg py-4 pl-4 pr-8 font-semibold shadow-md"
+				>
+					<span>Требуемый опыт работы (в годах): </span>
+					{#if jobExperience}
 						<span>{jobExperience}</span>
-						{:else}
+					{:else}
 						<span>не требуется</span>
-						{/if}
-					</section>
+					{/if}
+				</section>
 				<section class="flex w-2/3 flex-col gap-y-4 rounded-lg p-4" id="description">
 					<h1 class="text-2xl font-bold">Описание вакансии</h1>
 					<p class="text-lg">{jobDescription}</p>
