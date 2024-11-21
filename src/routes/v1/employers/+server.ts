@@ -43,6 +43,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 				}
 			},
 			select: {
+				employer_id: true,
 				company: true,
 				logo: true
 			},
@@ -61,6 +62,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	if (isPermitted && urlEmployerId === -1) {
 		let employers = await prisma.employers.findMany({
 			select: {
+				employer_id: true,
 				company: true,
 				logo: true
 			},

@@ -23,3 +23,9 @@ export interface UserCookieInfo {
 	iat: number;
 	exp: number;
 }
+
+export interface EmployerInfo {
+	employer_id: number;
+	company: string;
+	logo: string;
+}

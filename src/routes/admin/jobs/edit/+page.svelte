@@ -1,135 +1,104 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import { onMount } from 'svelte';
-  import { writable, type Writable } from 'svelte/store';
-  import { debounce } from '$lib/utils/helpers.js';
-  export let data../../products/edit/$types.js;
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	import { writable, type Writable } from 'svelte/store';
+	import { debounce } from '$lib/utils/helpers.js';
+	let { data } = $props();
 
-  let searchValue: string = '';
-  let url = $page.url.searchParams;
-  let pageN: Writable<number> = writable(parseInt(url.get('page') || '1'));
-  let totalPages = writable(1);
-  $: searchType = 'SMARTPHONE';
-  $: producttype = writable(url.get('type') || searchType);
-  let products: Writable<any> = writable([]);
-  let newProducts: Record<string, any> = {};
+	let searchValue: string = $state('');
+	let url = $page.url.searchParams;
+	let pageN: Writable<number> = writable(parseInt(url.get('page') || '1'));
+	let totalPages = writable(1);
+	let jobs: Writable<any> = writable([]);
+	let newJobs: Record<string, any> = {};
 
-  const updateNewValue = (productId: string, header: string, value: any) => {
-    if (!newProducts[productId]) {
-      newProducts[productId] = {};
-    }
-    newProducts[productId][header] = value;
-  };
+	const updateNewValue = (job_id: number, header: string, value: any) => {
+		if (!newJobs[job_id]) {
+			newJobs[job_id] = {};
+		}
+		newJobs[job_id][header] = value;
+	};
 
-  const deleteProduct = async (productid: string) => {
-    const response = await fetch(`/v1/products?q=${productid}`, {
-      method: 'DELETE',
-    });
+	const deleteJob = async (job_id: number) => {
+		const response = await fetch(`/v1/jobs?q=${job_id}`, {
+			method: 'DELETE'
+		});
 
-    if (response.ok) {
-      window.location.href = '/admin/products';
-    }
-  };
+		if (response.ok) {
+			window.location.href = '/admin/jobs/edit';
+		}
+	};
 
-  const saveChanges = async () => {
-    const requestBody = newProducts;
-    try {
-      const response = await fetch('/v1/products', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody),
-      });
-      if (response.ok) {
-        console.log('Changes saved successfully');
-        window.location.reload();
-      } else {
-        console.error('Failed to save changes');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+	const saveChanges = async () => {
+		const requestBody = newJobs;
+		try {
+			const response = await fetch('/v1/jobs', {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(requestBody)
+			});
+			if (response.ok) {
+				console.log('Changes saved successfully');
+				window.location.reload();
+			} else {
+				console.error('Failed to save changes');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	};
 
-  let tableHeaders: string[] = [
-    'productid',
-    'name',
-    'price',
-    'instock',
-    'discountavailable',
-    'discount',
-    'supplierid',
-    'releaseyear',
-    'color',
-    'photo',
-    'Действие',
-  ];
+	let tableHeaders: string[] = [
+		'job_id',
+		'title',
+		'description',
+		'salary',
+		'experience',
+		'employer_id',
+		'Действие'
+	];
 
-  let defaultProducts: Record<string, any> = {};
+	let defaultProducts: Record<string, any> = {};
 
-  const _fetchProductData = async () => {
-    const response = await fetch(
-      `/v1/products?q=${searchValue}&page=${$pageN}&type=${$producttype}`
-    );
-    const { products: resProducts, totalPages: resTotalPages } =
-      await response.json();
-    products.set(resProducts);
-    resProducts.forEach((el: Record<string, any>) => {
-      defaultProducts[el.productid] = el;
-    });
-    console.log(resProducts);
-    totalPages.set(resTotalPages);
-  };
+	const _fetchJobData = async () => {
+		const response = await fetch(`/v1/jobs?q=${searchValue}&page=${$pageN}`);
+		const { jobs: resJobs, totalPages: resTotalPages } = await response.json();
+		jobs.set(resJobs);
+		resJobs.forEach((el: Record<string, any>) => {
+			defaultProducts[el.job_id] = el;
+		});
+		totalPages.set(resTotalPages);
+	};
 
-  const debouncedFetchData = debounce(_fetchProductData, 400);
+	const debouncedFetchData = debounce(_fetchJobData, 400);
 
-  onMount(async () => {
-    await _fetchProductData();
-  });
+	onMount(async () => {
+		await _fetchJobData();
+	});
 
-  $: {
-    searchValue = searchValue.replaceAll(/['"`;%|]/g, '');
-  }
+	$effect(() => {
+		searchValue = searchValue.replaceAll(/['"`;%|]/g, '');
+	});
 
-  $: {
-    totalPages.set(data.products.totalPages);
-    console.log($totalPages);
-    console.log(newProducts);
-  }
+	$effect(() => {
+		totalPages.set(data.jobs.totalPages);
+	});
 </script>
 
 <section class="mt-4 flex w-full justify-center gap-x-4">
 	<input
 		type="text"
-		name="search-user"
-		id="search-user"
+		name="search-job"
+		id="search-job"
 		placeholder="Введите данные для поиска"
 		class="box-border h-12 w-96 border border-gray-500 bg-white p-2 text-sm hover:border"
 		bind:value={searchValue}
-		on:input={() => {
+		oninput={() => {
 			debouncedFetchData();
 		}}
 	/>
-	<select
-		name="product-type"
-		id="product-type"
-		bind:value={searchType}
-		on:change={() => {
-			producttype.set(searchType);
-			_fetchProductData();
-		}}
-		class="px-2"
-	>
-		<option value="SMARTPHONE" selected>Смартфон</option>
-		<option value="TABLET">Планшет</option>
-		<option value="CELLPHONE">Сотовый телефон</option>
-		<option value="CABLE">Кабель</option>
-		<option value="CHARGER">Зарядное устройство</option>
-		<option value="WATCH">Часы</option>
-		<option value="PLAYER">Плеер</option>
-		<option value="HEADPHONE">Наушники</option>
-	</select>
 </section>
 <section class="flex w-full justify-center">
 	<section class="flex w-full justify-center overflow-x-scroll">
@@ -137,9 +106,9 @@
 			<thead>
 				<tr>
 					<th class="border border-gray-300 bg-gray-300 px-4 py-2 text-left"></th>
-					{#if $products}
-						{#each $products as product (product.productid)}
-							<th class="border border-gray-300 px-4 py-2 text-left">{product.name}</th>
+					{#if $jobs}
+						{#each $jobs as job (job.job_id)}
+							<th class="border border-gray-300 px-4 py-2 text-left">{job.title}</th>
 						{/each}
 					{/if}
 				</tr>
@@ -149,57 +118,32 @@
 					{#each tableHeaders as header}
 						<tr>
 							<td class="border border-gray-300 px-4 py-2">{header}</td>
-							{#if $products}
-								{#each $products as product}
+							{#if $jobs}
+								{#each $jobs as job}
 									<td class="border border-gray-300 px-4 py-2">
-										{#if header === 'instock' || header === 'discountavailable'}
-											<input
-												type="checkbox"
-												checked={product[header]}
-												on:change={(e) =>
-													updateNewValue(
-														product.productid,
-														header,
-														//@ts-ignore
-														e.target.checked
-													)}
-											/>
-										{:else if header === 'discount' || header === 'releaseyear' || header === 'price' || header === 'supplierid'}
+										{#if header === 'experience' || header === 'salary' || header === 'employer_id'}
 											<input
 												type="number"
-												bind:value={product[header]}
-												on:change={() => updateNewValue(product.productid, header, product[header])}
+												min={header === 'experience' || header === 'employer_id' ? 0 : 20_000}
+												max={header === 'experience'
+													? 60
+													: header === 'salary'
+														? 900_000
+														: Infinity}
+												bind:value={job[header]}
+												onchange={() => updateNewValue(job.job_id, header, job[header])}
 											/>
-										{:else if header === 'photo'}
-											<section class="flex w-max flex-col gap-y-4">
-												{#each product.photo as photo, index}
-													<section class="flex w-max">
-														<input
-															type="file"
-															accept=".jpg, .jpeg, .png, .webp"
-															bind:value={defaultProducts[product.productid].photo[index]}
-															on:change={(e) => {
-																defaultProducts[product.productid].photo[
-																	index
-																	//@ts-ignore
-																] = e.target.files[0]?.name;
-																updateNewValue(product.productid, header, product[header]);
-															}}
-														/>
-													</section>
-												{/each}
-											</section>
 										{:else if header !== 'Действие'}
 											<input
 												type="text"
-												bind:value={product[header]}
-												on:change={() => updateNewValue(product.productid, header, product[header])}
-												disabled={header === 'productid'}
+												bind:value={job[header]}
+												onchange={() => updateNewValue(job.job_id, header, job[header])}
+												disabled={header === 'job_id'}
 											/>
 										{:else}
 											<a
 												class={'px-4 py-2 text-left font-bold text-red-600 hover:cursor-pointer'}
-												on:click={() => deleteProduct(product.productid)}>Удалить</a
+												onclick={() => deleteJob(job.job_id)}>Удалить</a
 											>
 										{/if}
 									</td>
@@ -217,20 +161,20 @@
 	<button
 		class="text-lg font-semibold text-blue-600 disabled:text-gray-600"
 		disabled={$pageN === 1}
-		on:click={() => {
+		onclick={() => {
 			$pageN--;
-			_fetchProductData();
+			_fetchJobData();
 		}}>Назад</button
 	>
 	<button
 		class="text-lg font-semibold text-blue-600 disabled:text-gray-600"
 		disabled={$pageN === $totalPages}
-		on:click={() => {
+		onclick={() => {
 			$pageN++;
-			_fetchProductData();
+			_fetchJobData();
 		}}>Вперед</button
 	>
-	<button class="rounded-lg bg-blue-600 px-8 py-4 text-white" on:click={saveChanges}
+	<button class="rounded-lg bg-blue-600 px-8 py-4 text-white" onclick={saveChanges}
 		>Сохранить изменения</button
 	>
 </section>

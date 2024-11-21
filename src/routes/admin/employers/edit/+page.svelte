@@ -121,7 +121,7 @@
 						<td class="px-4 py-2 text-left"
 							><input
 								type="text"
-								name="companyname"
+								name="company"
 								bind:value={employer.company}
 								class="w-[100px] border border-gray-300"
 								on:input={(e) =>

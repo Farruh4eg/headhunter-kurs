@@ -17,10 +17,10 @@ model employers {
 model joblistings {
   job_id              Int                   @id @default(autoincrement())
   title               String                @db.VarChar(150)
-  description         String?
-  salary              Int?
+  description         String
+  salary              Int
   employer_id         Int
-  experience          Int?                  @db.SmallInt @default(0)
+  experience          Int?                  @default(0) @db.SmallInt
   date_created        DateTime?             @default(now()) @db.Timestamp(6)
   employers           employers?            @relation(fields: [employer_id], references: [employer_id], onDelete: NoAction, onUpdate: NoAction)
   savedjoblistings    savedjoblistings[]

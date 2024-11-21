@@ -115,7 +115,8 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 				email: true,
 				roles: {
 					select: {
-						role: true
+						role: true,
+						role_id: true
 					}
 				},
 				date_created: true,
@@ -143,7 +144,8 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 				email: true,
 				roles: {
 					select: {
-						role: true
+						role: true,
+						role_id: true
 					}
 				},
 				date_created: true,
@@ -244,27 +246,23 @@ export const POST: RequestHandler = async ({ request }) => {
 };
 
 export const PUT: RequestHandler = async ({ request, url }) => {
-	const role = url.searchParams.get('role');
-	const changingUserId = +url.searchParams.get('user_id')!;
+	const role = +url.searchParams.get('role')!;
+	const changingUserId = +url.searchParams.get('q')!;
 
 	if (role && changingUserId) {
-		const user = await prisma.users.update({
+		await prisma.users.update({
 			where: {
 				user_id: changingUserId
 			},
 			data: {
-				roles: {
-					update: {
-						role
-					}
-				}
+				role_id: role
 			}
 		});
 
 		return new Response(
 			JSON.stringify({
 				success: true,
-				message: 'User privilige changed'
+				message: 'User privilege changed'
 			}),
 			{
 				status: 200,

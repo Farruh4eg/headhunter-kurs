@@ -18,13 +18,13 @@ export const GET: RequestHandler = (async ({ url }: { url: URL }) => {
 
 	const salary: number[] = [20_000, 900_000];
 	const salaryParam = url.searchParams.get('salary');
-	const expParam = url.searchParams.get('experience') || '';
+	const expParam = url.searchParams.get('experience') || 0;
 
 	if (salaryParam) {
-		let splittedPrice = salaryParam.split('-');
+		let splittedSalary = salaryParam.split('-');
 		try {
-			salary[0] = parseInt(splittedPrice[0]); // min price
-			salary[1] = parseInt(splittedPrice[1]); // max price
+			salary[0] = parseInt(splittedSalary[0]); // min salary
+			salary[1] = parseInt(splittedSalary[1]); // max salary
 		} catch (e) {
 			salary[0] = 20_000;
 			salary[1] = 900_000;
@@ -257,14 +257,14 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
 	const body = await request.json();
 
-	let productinfo: Record<any, any> = {};
+	let jobInfo: Record<any, any> = {};
 	Object.entries(body).forEach(([key, value]) => {
 		if (body[key]) {
-			productinfo[key] = value;
+			jobInfo[key] = value;
 		}
 	});
 
-	const prismaJobData = productinfo as Prisma.joblistingsCreateInput;
+	const prismaJobData = jobInfo as Prisma.joblistingsCreateInput;
 	await prisma.joblistings.create({
 		data: prismaJobData
 	});

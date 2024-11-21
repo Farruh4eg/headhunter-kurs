@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-
 	let employer: Record<string, any> = {};
 
 	const handleSubmit = async (event: Event) => {
@@ -34,9 +32,9 @@
 	<section class="mt-[5%] flex w-1/2 flex-col gap-y-8">
 		<input
 			type="text"
-			name="companyname"
+			name="company"
 			required
-			placeholder="companyname"
+			placeholder="company"
 			class="p-2 placeholder:text-lg"
 		/>
 

@@ -5,7 +5,6 @@
 	let { data } = $props();
 
 	const userData: UserData = JSON.parse(data.userInsensitiveData);
-	console.log(userData);
 
 	let notice: HTMLParagraphElement;
 
