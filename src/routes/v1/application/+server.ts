@@ -28,6 +28,28 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	});
 
 	if (application == null) {
+		const job = await prisma.joblistings.findUnique({
+			where: {
+				job_id
+			},
+			select: {
+				experience: true
+			}
+		});
+
+		const user = await prisma.users.findUnique({
+			where: {
+				user_id
+			},
+			select: {
+				experience: true
+			}
+		});
+
+		if (user?.experience! < job?.experience!) {
+			return createErrorResponse('Ваш опыт работы меньше требуемого', 400);
+		}
+
 		await prisma.userjobapplications.create({
 			data: {
 				user_id,

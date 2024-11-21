@@ -9,6 +9,8 @@
 	let buttonText = $state('Откликнуться');
 	let hoverColor = $state('hover:bg-blue-600');
 	let hasApplied = $state(false);
+	let errorMessage = $state('');
+	let dialogElement: HTMLDialogElement;
 
 	onMount(async () => {
 		const response = await fetch('/v1/application', {
@@ -45,7 +47,7 @@
 			buttonText = 'Откликнуться';
 			hoverColor = 'hover:bg-blue-600';
 		} else {
-			await handleFetch(
+			const response = await handleFetch(
 				'/v1/application',
 				'POST',
 				{
@@ -56,9 +58,15 @@
 					'Content-Type': 'application/json'
 				}
 			);
-			hasApplied = true;
-			buttonText = 'Отмена';
-			hoverColor = 'hover:bg-red-600';
+			if (response.ok) {
+				hasApplied = true;
+				buttonText = 'Отмена';
+				hoverColor = 'hover:bg-red-600';
+			} else if (response.status === 400) {
+				dialogElement.showModal();
+				const res = await response.json();
+				errorMessage = await res.message;
+			}
 		}
 	}
 
@@ -70,3 +78,17 @@
 <button onclick={manageApplication} bind:this={applyButton} class={classes}>
 	{buttonText}
 </button>
+
+<dialog bind:this={dialogElement} class="w-1/5 rounded-lg border-2 border-blue-600">
+	<section class="flex h-48 w-full flex-col items-center justify-between p-10">
+		<p>{errorMessage}</p>
+		<section class="flex w-full justify-center gap-x-12">
+			<button
+				onclick={() => {
+					dialogElement.close();
+				}}
+				class="border border-gray-300 bg-blue-600 px-8 py-2 text-white">ОК</button
+			>
+		</section>
+	</section>
+</dialog>

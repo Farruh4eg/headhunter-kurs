@@ -58,7 +58,7 @@ model users {
   first_name          String?               @unique @db.VarChar(100)
   password            String                @db.VarChar(256)
   email               String?               @unique @db.VarChar(150)
-  experience          Int?                  @db.SmallInt
+  experience          Int?                  @default(0) @db.SmallInt
   date_created        DateTime?             @default(now()) @db.Date
   refresh_token       String
   role_id             Int                   @default(1)
