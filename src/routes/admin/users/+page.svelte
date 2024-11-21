@@ -5,7 +5,7 @@
 	import { debounce } from '$lib/utils/helpers.js';
 	let { data } = $props();
 
-	let currentUserLevel = $state(-1);
+	let currentUserLevel = $state(0);
 
 	let users: Writable<any> = writable([]);
 
@@ -42,13 +42,13 @@
 		await _fetchUserData();
 		switch (data.role) {
 			case 'admin':
-				currentUserLevel = 2;
+				currentUserLevel = 3;
 				break;
 			case 'mod':
-				currentUserLevel = 1;
+				currentUserLevel = 2;
 				break;
 			default:
-				currentUserLevel = 0;
+				currentUserLevel = 1;
 		}
 	});
 
@@ -134,7 +134,7 @@
 							<select
 								name="role"
 								id="role_{user.user_id}"
-								disabled={currentUserLevel !== 2 && currentUserLevel < user.roles.role_id}
+								disabled={currentUserLevel !== 3 && currentUserLevel < user.roles.role_id}
 								class="w-24 p-2"
 								onchange={(e) => {
 									handlePrivilegeChange(e, user.user_id);
@@ -145,7 +145,7 @@
 								<option
 									value="3"
 									selected={user.roles.role === 'admin'}
-									disabled={currentUserLevel < 2}>admin</option
+									disabled={currentUserLevel < 3}>admin</option
 								>
 							</select>
 						</td>

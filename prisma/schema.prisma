@@ -22,7 +22,7 @@ model joblistings {
   employer_id         Int
   experience          Int?                  @default(0) @db.SmallInt
   date_created        DateTime?             @default(now()) @db.Timestamp(6)
-  employers           employers?            @relation(fields: [employer_id], references: [employer_id], onDelete: NoAction, onUpdate: NoAction)
+  employers           employers?            @relation(fields: [employer_id], references: [employer_id], onDelete: Cascade, onUpdate: Cascade)
   savedjoblistings    savedjoblistings[]
   userjobapplications userjobapplications[]
 }
@@ -38,8 +38,8 @@ model savedjoblistings {
   user_id     Int
   job_id      Int
   saved_date  DateTime?    @default(now()) @db.Timestamp(6)
-  joblistings joblistings? @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction)
-  users       users?       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  joblistings joblistings? @relation(fields: [job_id], references: [job_id], onDelete: Cascade, onUpdate: Cascade)
+  users       users?       @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model userjobapplications {
@@ -47,8 +47,8 @@ model userjobapplications {
   user_id          Int
   job_id           Int
   application_date DateTime?    @default(now()) @db.Timestamp(6)
-  joblistings      joblistings? @relation(fields: [job_id], references: [job_id], onDelete: NoAction, onUpdate: NoAction)
-  users            users?       @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  joblistings      joblistings? @relation(fields: [job_id], references: [job_id], onDelete: Cascade, onUpdate: Cascade)
+  users            users?       @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model users {
