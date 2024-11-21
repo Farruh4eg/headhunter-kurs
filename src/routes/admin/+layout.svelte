@@ -5,20 +5,31 @@
 	let usersButton: HTMLButtonElement,
 		jobsButton: HTMLButtonElement,
 		employersButton: HTMLButtonElement,
-		applicationsButton: HTMLButtonElement;
+		applicationsButton: HTMLButtonElement,
+		reportButton: HTMLButtonElement;
 
 	let pathname: string;
 	$: pathname = $page.url.pathname;
 
 	onMount(() => {
-		if (pathname.includes('users')) {
-			usersButton.disabled = true;
-		} else if (pathname.includes('jobs')) {
-			jobsButton.disabled = true;
-		} else if (pathname.includes('employers')) {
-			employersButton.disabled = true;
-		} else if (pathname.includes('applications')) {
-			applicationsButton.disabled = true;
+		switch (true) {
+			case pathname.includes('users'):
+				usersButton.disabled = true;
+				break;
+			case pathname.includes('jobs'):
+				jobsButton.disabled = true;
+				break;
+			case pathname.includes('employers'):
+				employersButton.disabled = true;
+				break;
+			case pathname.includes('applications'):
+				applicationsButton.disabled = true;
+				break;
+			case pathname.includes('report'):
+				reportButton.disabled = true;
+				break;
+			default:
+				break;
 		}
 	});
 </script>
@@ -46,6 +57,11 @@
 				class="rounded-md border border-gray-400 bg-white px-6 py-4 disabled:bg-blue-600 disabled:text-white"
 				bind:this={applicationsButton}
 				on:click={() => (window.location.href = '/admin/applications?page=1')}>Отклики</button
+			>
+			<button
+				class="rounded-md border border-gray-400 bg-white px-6 py-4 disabled:bg-blue-600 disabled:text-white"
+				bind:this={reportButton}
+				on:click={() => (window.location.href = '/admin/report')}>Отчёт</button
 			>
 		</section>
 	</section>
