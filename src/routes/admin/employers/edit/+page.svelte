@@ -3,18 +3,18 @@
 	import { onMount } from 'svelte';
 	import { writable, type Writable } from 'svelte/store';
 	import { debounce } from '$lib/utils/helpers.js';
-	export let data;
+	let { data } = $props();
 
 	let employers: Writable<any> = writable([]);
 
-	let searchValue: string = '';
+	let searchValue: string = $state('');
 
 	let url = $page.url.searchParams;
 	let pageN: Writable<number> = writable(parseInt(url.get('page') || '1'));
 	let totalPages = writable(1);
 
-	let defaultSuppliers: Record<string, any> = {};
-	let newSuppliers: Record<string, any> = {};
+	let defaultEmployers: any = $state({});
+	let newEmployers: any = $state({});
 
 	const _fetchEmployerData = async (getTotal = false) => {
 		if (getTotal) {
@@ -29,22 +29,22 @@
 		const res = await response.json();
 		employers.set(res);
 		res.forEach((el: Record<string, string>) => {
-			defaultSuppliers[el.employer_id] = el;
+			defaultEmployers[el.employer_id] = el;
 		});
 	};
 
 	const debouncedFetchData = debounce(_fetchEmployerData, 400);
 
 	const updateNewValue = (employer_id: number, header: string, value: any) => {
-		if (!newSuppliers[employer_id]) {
-			newSuppliers[employer_id] = {};
+		if (!newEmployers[employer_id]) {
+			newEmployers[employer_id] = {};
 		}
-		newSuppliers[employer_id][header] = value;
-		if (!newSuppliers[employer_id].hasOwnProperty('company')) {
-			newSuppliers[employer_id]['company'] = defaultSuppliers[employer_id]['company'];
+		newEmployers[employer_id][header] = value;
+		if (!newEmployers[employer_id].hasOwnProperty('company')) {
+			newEmployers[employer_id]['company'] = defaultEmployers[employer_id]['company'];
 		}
-		if (!newSuppliers[employer_id].hasOwnProperty('logo')) {
-			newSuppliers[employer_id]['logo'] = defaultSuppliers[employer_id]['logo'];
+		if (!newEmployers[employer_id].hasOwnProperty('logo')) {
+			newEmployers[employer_id]['logo'] = defaultEmployers[employer_id]['logo'];
 		}
 	};
 
@@ -52,17 +52,20 @@
 		await _fetchEmployerData();
 	});
 
-	$: {
+	$effect(() => {
 		searchValue = searchValue.replaceAll(/['"`;%|]/g, '');
-	}
+	});
 
-	$: {
+	$effect(() => {
 		totalPages.set(data.totalPages);
-		console.log($totalPages);
-	}
+	});
 
-	const deleteSupplier = async (supplierid: number) => {
-		const response = await fetch(`/v1/employers?q=${supplierid}`, {
+	$effect(() => {
+		console.log(Object.keys(newEmployers).length);
+	});
+
+	const deleteSupplier = async (employer_id: number) => {
+		const response = await fetch(`/v1/employers?q=${employer_id}`, {
 			method: 'DELETE'
 		});
 
@@ -72,7 +75,7 @@
 	};
 
 	const saveChanges = async () => {
-		const requestBody = newSuppliers;
+		const requestBody = newEmployers;
 		try {
 			const response = await fetch('/v1/employers', {
 				method: 'PUT',
@@ -101,7 +104,7 @@
 		placeholder="Введите данные для поиска"
 		class="box-border h-12 w-96 border border-gray-500 bg-white p-2 text-sm hover:border"
 		bind:value={searchValue}
-		on:input={() => {
+		oninput={() => {
 			debouncedFetchData(true);
 		}}
 	/>
@@ -112,6 +115,7 @@
 			<tr class="bg-gray-100">
 				<th class="px-4 py-2 text-left">Наименование</th>
 				<th class="px-4 py-2 text-left">Лого</th>
+				<th class="px-4 py-2 text-left">Действие</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -122,26 +126,24 @@
 							><input
 								type="text"
 								name="company"
+								id="company"
 								bind:value={employer.company}
-								class="w-[100px] border border-gray-300"
-								on:input={(e) =>
-									updateNewValue(employer.employer_id, e.target.name, e.target.value)}
+								class="border border-gray-300"
+								oninput={(e) => updateNewValue(employer.employer_id, e.target.name, e.target.value)}
 							/></td
 						>
 						<td class="px-4 py-2 text-left"
 							><input
 								type="file"
 								name="logo"
-								class=" w-[100px]"
-								bind:value={defaultSuppliers[employer.employer_id].logo}
-								on:input={(e) => {
-									console.log(e.target.files[0]?.name);
-									updateNewValue(employer.supplierid, e.target.name, e.target.files[0]?.name);
+								id="logo"
+								oninput={(e) => {
+									updateNewValue(employer.employer_id, e.target.name, e.target.files[0]?.name);
 								}}
 							/>
 						</td>
 						<td class="w-[100px] px-4 py-2 text-left font-bold text-red-600 hover:cursor-pointer"
-							><a on:click={() => deleteSupplier(employer.supplierid)}>Удалить</a></td
+							><a onclick={() => deleteSupplier(employer.employer_id)}>Удалить</a></td
 						>
 					</tr>
 				{/each}
@@ -154,7 +156,7 @@
 	<button
 		class="text-lg font-semibold text-blue-600 disabled:text-gray-600"
 		disabled={$pageN === 1}
-		on:click={() => {
+		onclick={() => {
 			$pageN--;
 			_fetchEmployerData();
 		}}>Назад</button
@@ -162,14 +164,14 @@
 	<button
 		class="text-lg font-semibold text-blue-600 disabled:text-gray-600"
 		disabled={$pageN === $totalPages}
-		on:click={() => {
+		onclick={() => {
 			$pageN++;
 			_fetchEmployerData();
 		}}>Вперед</button
 	>
 	<button
 		class="rounded-lg bg-blue-600 px-8 py-4 text-white disabled:bg-gray-300 disabled:text-black"
-		on:click={saveChanges}
-		disabled={Object.keys(newSuppliers).length > 0 ? false : true}>Сохранить изменения</button
+		onclick={saveChanges}
+		disabled={Object.keys(newEmployers).length > 0 ? false : true}>Сохранить изменения</button
 	>
 </section>

@@ -15,14 +15,12 @@ export const load = async ({ cookies, fetch, url }: ServerLoadEvent) => {
 	const page: number = parseInt(url.searchParams.get('page') ?? '1');
 	const pageSize = 12;
 
-	const response = await fetch(`/v1/employers?q=-1&page=${page}`, {
-		method: 'GET'
-	});
-	const suppliers = await response.json();
+	const response = await fetch(`/v1/employers?q=-1&page=${page}`);
+	const employers = await response.json();
 
 	let totalPages = await prisma.employers.count();
 
 	totalPages = Math.ceil(totalPages / pageSize);
 
-	return { suppliers, totalPages };
+	return { employers, totalPages };
 };

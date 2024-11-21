@@ -3,8 +3,9 @@
 	import { onMount } from 'svelte';
 
 	let usersButton: HTMLButtonElement,
-		productsButton: HTMLButtonElement,
-		suppliersButton: HTMLButtonElement;
+		jobsButton: HTMLButtonElement,
+		employersButton: HTMLButtonElement,
+		applicationsButton: HTMLButtonElement;
 
 	let pathname: string;
 	$: pathname = $page.url.pathname;
@@ -13,9 +14,11 @@
 		if (pathname.includes('users')) {
 			usersButton.disabled = true;
 		} else if (pathname.includes('jobs')) {
-			productsButton.disabled = true;
-		} else if (pathname.includes('companies')) {
-			suppliersButton.disabled = true;
+			jobsButton.disabled = true;
+		} else if (pathname.includes('employers')) {
+			employersButton.disabled = true;
+		} else if (pathname.includes('applications')) {
+			applicationsButton.disabled = true;
 		}
 	});
 </script>
@@ -31,13 +34,18 @@
 			>
 			<button
 				class="rounded-md border border-gray-400 bg-white px-6 py-4 disabled:bg-blue-600 disabled:text-white"
-				bind:this={productsButton}
-				on:click={() => (window.location.href = '/admin/jobs/edit')}>Товары</button
+				bind:this={jobsButton}
+				on:click={() => (window.location.href = '/admin/jobs/edit')}>Вакансии</button
 			>
 			<button
 				class="rounded-md border border-gray-400 bg-white px-6 py-4 disabled:bg-blue-600 disabled:text-white"
-				bind:this={suppliersButton}
-				on:click={() => (window.location.href = '/admin/companies/edit')}>Поставщики</button
+				bind:this={employersButton}
+				on:click={() => (window.location.href = '/admin/employers/edit')}>Работодатели</button
+			>
+			<button
+				class="rounded-md border border-gray-400 bg-white px-6 py-4 disabled:bg-blue-600 disabled:text-white"
+				bind:this={applicationsButton}
+				on:click={() => (window.location.href = '/admin/applications?page=1')}>Отклики</button
 			>
 		</section>
 	</section>
