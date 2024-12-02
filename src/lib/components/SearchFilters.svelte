@@ -44,8 +44,14 @@
 	const validateFilters = () => {
 		if (parseInt(inputMinSalary.value) < 20_000 || isNaN(parseInt(inputMinSalary.value))) {
 			inputMinSalary.value = '20000';
+		} else if (parseInt(inputMinSalary.value) > 900_000) {
+			inputMinSalary.value = '899999';
+		}
+
+		if (parseInt(inputMaxSalary.value) > 900_000 || isNaN(parseInt(inputMaxSalary.value))) {
+			inputMaxSalary.value = '900000';
 		} else if (parseInt(inputMaxSalary.value) > 900_000) {
-			inputMinSalary.value = '900000';
+			inputMaxSalary.value = '900000';
 		}
 
 		salary = [inputMinSalary.value, inputMaxSalary.value].join('-');
